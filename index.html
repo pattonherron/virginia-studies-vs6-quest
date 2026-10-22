@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123f7a">
+  <meta name="description" content="A colorful animated Virginia Studies VS.6 game about famous Virginians, founding documents, government, westward movement, and Nat Turner's Rebellion.">
+  <meta property="og:title" content="Virginia Studies Quest">
+  <meta property="og:description" content="Play a colorful, animated 36-question Virginia Studies adventure.">
+  <meta property="og:image" content="assets/virginia-panorama.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Virginia Studies Quest</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23123f7a'/%3E%3Cpath d='M13 15h11l8 27 8-27h11L37 51H27z' fill='%23ffd34e'/%3E%3Cpath d='M43 9l2.1 4.4L50 14l-3.6 3.4.9 4.9-4.3-2.4-4.3 2.4.9-4.9L36 14l4.9-.6z' fill='white'/%3E%3C/svg%3E">
+  <link rel="preload" href="assets/virginia-panorama.png" as="image">
+  <link rel="preload" href="assets/captain-hoot.png" as="image">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sky-glow" aria-hidden="true"></div>
+  <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+
+  <main class="game-shell">
+    <header class="topbar">
+      <button id="homeButton" class="brand-button" type="button" aria-label="Return to the start screen">
+        <span class="brand-star" aria-hidden="true">★</span>
+        <span>Virginia Studies Quest</span>
+      </button>
+      <button id="soundButton" class="sound-button" type="button" aria-pressed="true">
+        <span id="soundIcon" aria-hidden="true">🔊</span>
+        <span id="soundLabel">Sound on</span>
+      </button>
+    </header>
+
+    <section id="startScreen" class="screen start-screen is-active" aria-labelledby="gameTitle">
+      <div class="start-panorama" role="group" aria-label="Virginia Studies Quest start screen with an illustrated Virginia landscape">
+        <div class="start-shade"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Virginia Studies VS.6</p>
+          <h1 id="gameTitle">Virginia Studies Quest</h1>
+          <p class="hero-text">Meet famous Virginians, explore the founding documents, and follow the westward movement. Answer questions, build a streak, and help Captain Hoot chart the story of a new nation.</p>
+
+          <fieldset class="round-picker">
+            <legend>Choose your quest</legend>
+            <label class="round-option">
+              <input type="radio" name="roundLength" value="10" checked>
+              <span><strong>Quick</strong><small>10 questions</small></span>
+            </label>
+            <label class="round-option">
+              <input type="radio" name="roundLength" value="20">
+              <span><strong>Adventure</strong><small>20 questions</small></span>
+            </label>
+            <label class="round-option">
+              <input type="radio" name="roundLength" value="36">
+              <span><strong>Master</strong><small>All 36</small></span>
+            </label>
+          </fieldset>
+
+          <button id="startButton" class="primary-button" type="button">
+            <span aria-hidden="true">🗺️</span>
+            Start the quest
+          </button>
+          <p class="key-hint">Tip: use number keys 1–4. Master mode includes every question.</p>
+        </div>
+
+        <img class="mascot mascot-start" src="assets/captain-hoot.png" alt="Captain Hoot, a friendly owl holding a map and blue quill">
+        <div class="floating-badge badge-one" aria-hidden="true">🏛️</div>
+        <div class="floating-badge badge-two" aria-hidden="true">🌿</div>
+        <div class="floating-badge badge-three" aria-hidden="true">🏡</div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen" aria-label="Quiz game" hidden>
+      <div class="scene-strip">
+        <div class="scene-overlay"></div>
+        <div class="scene-title">
+          <span id="sceneIcon" class="scene-icon" aria-hidden="true">🎭</span>
+          <div>
+            <span>Current stop</span>
+            <strong id="sceneName">Famous Virginians</strong>
+          </div>
+        </div>
+        <img class="mascot mascot-game" src="assets/captain-hoot.png" alt="Captain Hoot cheering beside the quiz">
+      </div>
+
+      <div class="hud" aria-label="Game progress">
+        <div class="hud-stat">
+          <span class="hud-label">Question</span>
+          <strong><span id="questionNumber">1</span>/<span id="questionTotal">10</span></strong>
+        </div>
+        <div class="progress-wrap" aria-hidden="true">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div class="hud-stat hud-stat-score">
+          <span class="hud-label">Score</span>
+          <strong id="scoreValue">0</strong>
+        </div>
+        <div class="streak-chip" aria-label="Current answer streak">
+          <span aria-hidden="true">🔥</span>
+          <strong id="streakValue">0</strong>
+          <span>streak</span>
+        </div>
+      </div>
+
+      <article id="questionCard" class="question-card">
+        <div class="question-topline">
+          <span id="topicPill" class="topic-pill">Culture and Settlement</span>
+          <span class="points-note">Up to 225 points</span>
+        </div>
+        <h2 id="questionText">Question appears here</h2>
+        <div id="answersGrid" class="answers-grid" aria-label="Answer choices"></div>
+        <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen" aria-labelledby="resultTitle" hidden>
+      <div class="result-card">
+        <div id="resultMedal" class="result-medal" aria-hidden="true">🏆</div>
+        <p class="eyebrow result-eyebrow">Quest complete</p>
+        <h2 id="resultTitle">History hero</h2>
+        <p id="resultMessage" class="result-message">Captain Hoot is impressed!</p>
+
+        <div class="result-stats">
+          <div><span>Correct</span><strong id="correctResult">0/10</strong></div>
+          <div><span>Accuracy</span><strong id="accuracyResult">0%</strong></div>
+          <div><span>Score</span><strong id="scoreResult">0</strong></div>
+          <div><span>Best</span><strong id="bestResult">0</strong></div>
+        </div>
+
+        <div id="reviewPanel" class="review-panel" hidden>
+          <h3>Clues to review</h3>
+          <ul id="reviewList"></ul>
+        </div>
+
+        <div class="result-actions">
+          <button id="playAgainButton" class="primary-button" type="button"><span aria-hidden="true">🔁</span> Play again</button>
+          <button id="changeQuestButton" class="secondary-button" type="button">Change quest length</button>
+        </div>
+        <img class="mascot mascot-result" src="assets/captain-hoot.png" alt="Captain Hoot celebrating the completed quest">
+      </div>
+    </section>
+  </main>
+
+  <noscript>This game needs JavaScript enabled to work.</noscript>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
